@@ -1,2 +1,62 @@
 ---
 # tasks file for dockerserver
+- name: DOCKER -instalação de pacotes e dependencias.
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - lvm2
+    - docker
+    - epel-release
+  notify:
+    - enable docker
+
+- name: DOCKER -instalação do pacote pip.
+  yum:
+    name: python-pip
+
+- name: instalar pacote docker-py.
+  pip:
+    name: docker-py
+
+- name: DOCKER-COMPOSE -instalação do repo docker-compose.
+  shell: sudo curl -L "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose 
+
+- name: DOCKER-COMOSE -configurar binario.
+  shell: sudo chmod +x /usr/local/bin/docker-compose 
+
+- name: DOCKER -criar grupo docker.
+  group:
+    name: "{{group_user}}"
+    state: present
+
+- name: adicionar usuario vagrant no grupo docker.
+  shell: "sudo usermod -aG docker {{sys_user}}"
+
+#- name: adicionar usuario de serviço.
+#  user:
+#    name: "{{sys_user}}"
+#    shell: "/bin/bash" 
+#    home: "{{path_sys}}"
+#    groups: "{{group_user}}"
+#    append: yes
+
+- name: DOCKER -alterar arquivo de configuração do docker
+  template:
+    src: docker.j2  
+    dest: /etc/sysconfig/docker
+    backup: yes
+  notify:
+   - restart docker
+
+- name: DOCKER_COMPOSE -criar diretorio para docker compose.
+  file:
+    path: "{{path_sys}}/docker-compose"
+    owner: "{{sys_user}}"
+    group: "{{group_user}}"
+    mode: 0775
+    state: directory
+  when: sys_user is defined
+
+- name: force restart docker
+  shell: sudo service docker restart

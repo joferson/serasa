@@ -1,9 +1,8 @@
 ---
-
 - hosts: docker
   vars:
    sys_user: vagrant
-   path_sys: /webgosys
+   path_sys: /vagrant
    group_user: docker
   become: true
   become_method: sudo
