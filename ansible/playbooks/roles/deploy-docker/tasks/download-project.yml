@@ -1,3 +1,0 @@
----
-t clone --single-branch --branch containers host:/dir.git
-
