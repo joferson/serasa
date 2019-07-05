@@ -1,11 +1,16 @@
 Requerimentos
 ===========
--  Precisa ter o vagrant instalado e configurado em seu computadot.
+-  Precisa ter o vagrant instalado e configurado em seu computador.
 
 Passo a passo
 =========
 
 -  Acesse o diretorio do projeto ~/serasa/vagrant.
+
+- execute um git checkout para o branch ansible.
+~~~~
+   $git checkout ansible
+~~~~   
 
 -  verificar se o arquivo  Vagrantfile existe no diretorio corrente.
 
