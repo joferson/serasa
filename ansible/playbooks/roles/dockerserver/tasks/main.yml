@@ -1,25 +1,37 @@
 ---
-# tasks file for dockerserver
+#- name: instalar do pacote repo.
+#  yum_repository:
+#    name: centos
+#    description: DOCKER YUM repo
+#    baseurl: https://download.docker.com/linux/centos/docker-ce.repo
+#    enable: yes
+- name: DOCKER -instalar repo docker
+  shell: sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo & sudo yum-config-manager --enable docker-ce-edge & sudo yum-config-manager --enable docker-ce-test
+
+- name: instalar do pacote repo.
+  yum:
+    name: epel-release
+
 - name: DOCKER -instalação de pacotes e dependencias.
   yum:
     name: "{{ item }}"
     state: present
   with_items:
+#    - yum-utils
     - lvm2
-    - docker
-    - epel-release
+    - device-mapper-persistent-data
+    - python-pip
+    - net-tools
+    - vim
+    - docker-ce
   notify:
     - enable docker
 
-- name: DOCKER -instalação do pacote pip.
-  yum:
-    name: python-pip
-
-- name: instalar pacote docker-py.
+- name: DOCKER -instalar pacote docker-py.
   pip:
     name: docker-py
 
-- name: DOCKER-COMPOSE -instalação do repo docker-compose.
+- name: DOCKER-COMPOSE -instalar repo docker-compose.
   shell: sudo curl -L "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose 
 
 - name: DOCKER-COMOSE -configurar binario.
@@ -30,7 +42,7 @@
     name: "{{group_user}}"
     state: present
 
-- name: adicionar usuario vagrant no grupo docker.
+- name: DOCKER -adicionar usuario vagrant no grupo docker.
   shell: "sudo usermod -aG docker {{sys_user}}"
 
 #- name: adicionar usuario de serviço.
@@ -58,5 +70,5 @@
     state: directory
   when: sys_user is defined
 
-- name: force restart docker
+- name: DOCKER -force restart docker
   shell: sudo service docker restart
