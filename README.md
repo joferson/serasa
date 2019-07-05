@@ -10,12 +10,13 @@ Passo a passo
 -  verificar se o arquivo  Vagrantfile existe no diretorio corrente.
 
 -  rode o comando:
-
-   - $vagrant up
-   
+~~~~
+   $vagrant up
+~~~~   
 - será solicitado a interface de rede que será utilizado na vm criada pelo vagrant 
   escola de acordo com as suas configuração de rede. 
  
   
-  
+~~~~  
    -$ vagrant provision
+~~~~
